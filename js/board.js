@@ -1,5 +1,5 @@
 spacesOwned = [[],[],[],[]];
-//spacesOwned[0][player-id][space-id]
+//spacesOwned[player-id][space-id]
 
 
 //spacesOwned[0][12]={own:true,houses:0,hotels:0,mortgage:false};
@@ -33,6 +33,12 @@ spacesOwned[0][34]={own:true,houses:1,hotels:0,mortgage:false};
 
 spacesOwned[1][37]={own:true,houses:4,hotels:0,mortgage:false};
 spacesOwned[0][39]={own:true,houses:4,hotels:0,mortgage:false};
+
+spacesOwned[0][5]={own:true,houses:0,hotels:0,mortgage:false};
+spacesOwned[0][25]={own:true,houses:0,hotels:0,mortgage:false};
+spacesOwned[0][35]={own:true,houses:0,hotels:0,mortgage:false};
+
+spacesOwned[0][12]={own:true,houses:0,hotels:0,mortgage:false};
 */
 
 spacesGroup = [];
@@ -275,7 +281,7 @@ spaces.push( new space('North Carolina Avenue',{'purchase':300,
 		'mortgage':150,
 		'houseCost':200,
 		'hotelCost':200},'#13a857',true,true,{x:0,y:450,h:50,w:100}));
-		spaces.push( new space('Community Chest',{'purchase':0},'FireBrick',false,false, {x:300,y:-400,h:50,w:100},'chest'));
+spaces.push( new space('Community Chest',{'purchase':0},'FireBrick',false,false, {x:300,y:-400,h:50,w:100},'chest'));
 spaces.push( new space('Pennsylvania Avenue',{'purchase':320,
 		'rent':28,
 		'housRent':{
@@ -287,9 +293,8 @@ spaces.push( new space('Pennsylvania Avenue',{'purchase':320,
 		'mortgage':160,
 		'houseCost':200,
 		'hotelCost':200},'#13a857',true,true,{x:0, y:350,h:50,w:100}));
-		
-		spaces.push( new space('Short Line',{'purchase':200,'rent':25,'mortgage':100},'#000000',true,false,{x:200,y:-400,h:50,w:100},'train'));
-		spaces.push( new space('Chance',{'purchase':0},'orange',false,false,{x:150,y:-400,h:50,w:100},'chance'));
+spaces.push( new space('Short Line',{'purchase':200,'rent':25,'mortgage':100},'#000000',true,false,{x:200,y:-400,h:50,w:100},'train'));
+spaces.push( new space('Chance',{'purchase':0},'orange',false,false,{x:150,y:-400,h:50,w:100},'chance'));
 spaces.push( new space('Park Place',{'purchase':350,
 		'rent':35,
 		'housRent':{
@@ -301,7 +306,7 @@ spaces.push( new space('Park Place',{'purchase':350,
 		'mortgage':175,
 		'houseCost':200,
 		'hotelCost':200},'#0066a4',true,true, {x:0,y:200,h:50,w:100}));
-		spaces.push( new space('Sales Tax',{'purchase':0},'green',false,false,{x:50,y:-400,h:50,w:100},'luxury'));
+spaces.push( new space('Sales Tax',{'purchase':0},'green',false,false,{x:50,y:-400,h:50,w:100},'luxury'));
 spaces.push( new space('Boardwalk',{'purchase':400,
 		'rent':50,
 		'housRent':{

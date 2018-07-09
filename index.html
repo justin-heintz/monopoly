@@ -21,15 +21,16 @@
 		body{margin:0; padding:0; background:#607d8b;}
  
 		.hidden{display:none;}
-		#foreground{display:block; margin:-170px auto 0 auto; border:1px solid #000;}
+		/*#foreground{display:block; margin:-170px auto 0 auto; border:1px solid #000;}*/
+		#foreground{display:block; float:left; border:1px solid #000;}
 		#dice{margin:10px 0; cursor:pointer; }
 		
 		#propertyCards{/*width:366px; float:left;*/}
 		
-		#propertyCardBlocks{}
-			.cardBlockRow{width:100%;}
-				.cardBlock{width:40px; height:40px; float:left;}
-		
+		#propertyCardBlocks{width:100%;}
+			.blockWrap{width:100%; padding:10px 0; border-bottom: 1px solid #ccc;}
+			.cardBlockRow{ margin-right: 20px; float:left;}
+				.cardBlock{width:20px; height:20px; float:left; border:1px solid #ccc;}
 		
 		.card{width:120px; height:183px; margin:0px; float:left; background:#fff; border: 1px solid #d9d4d4; font-size:10px;}
 			.card .header{padding: 10px 0; color:#fff; text-align:center; font-family:arial; font-size:11px; text-shadow: 1px 1px 2px #0D0B07;}
@@ -38,8 +39,8 @@
 				.widthHouse{}
 					.widthHouse span{float:right;}
 			.card .footer{ padding:10px; text-align:left;}
-			
-		#log{position:relative; width:448px; height:276px; top:380px; left:316px; padding:5px 20px; background:none; outline:none; border:0;}	
+		#log{width:428px; height:650px; float:left; background:#fff; overflow-y:scroll; overflow-x:none;}	
+			#log p{margin:0; }
 	</style>
 </head>
 <body>
@@ -52,11 +53,11 @@
 		
 		<div id="hiddenGame" class="hidden">
 			<div class="col-12">
-				<textarea id="log"></textarea>
 				<canvas id="foreground" width="650" height="650"></canvas>
+				<div id="log"></dov>
 			</div>
 			<div class="col-12">
-				<div id="propertyCardBlocks"></div>
+				<div id="propertyCardBlocks" class="clearfix"></div>
 				<div id="propertyCards"></div>
 			</div>
 			<div class="col-12">

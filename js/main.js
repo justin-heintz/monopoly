@@ -104,7 +104,7 @@ window.onload = function(){
 			dice.draw(canvas.foreground);
 			
 			pm.drawCardBlocks();
-			pm.drawCards();
+			//pm.drawCards();
 			pm.drawHouses(canvas.foreground);
 
 		canvas.foreground.restore();		
@@ -114,7 +114,7 @@ window.onload = function(){
 function log(msg,display=true){
 	if(display){
 		var elm = document.getElementById('log');
-		elm.value += msg+'\n\r';
+		elm.innerHTML += '<p>'+msg+'</p>';
 		elm.scrollTop = elm.scrollHeight;
 	}
 	console.log(msg);

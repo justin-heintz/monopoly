@@ -75,21 +75,49 @@ class playerManager{
 	}
 	drawCardBlocks(){
 		var html = '';
-		var curColor = '';
+		var curColor = '#864c38';
+		var ignoreIds = [0,2,4,7,10,12,17,20,22,27,30,33,36,38,5,15,25,35];
 		document.getElementById('propertyCardBlocks').innerHTML = html;
-		
-		
-		spacesOwned[this.whosTurn].forEach(function(sp,index){
-			if(curColor != spaces[index].color){html+='<div class="cardBlockRow">';}
-			html+='<div class="cardBlock" style="background:'+ spaces[index].color+'"></div>';
-			if(curColor != spaces[index].color){
-				html+='</div>';
-				curColor = spaces[index].color;
+ 
+/**-----------------------------------------------------------------------------------------------------------*/
+		for(let playerId=0; playerId<this.players.length; playerId++){
+			var starting = 1;
+			html+='<div class="blockWrap clearfix">'
+			for(let spaceId=0; spaceId<spaces.length; spaceId++){
+				if(ignoreIds.indexOf( spaceId ) == -1){
+					if(starting == 1){html+=' <div class="cardBlockRow clearfix">';}
+					if(curColor != spaces[spaceId].color ){html+='</div><div class="cardBlockRow clearfix">';}
+
+					html += this.cardBlock(playerId,spaceId);
+					
+					if(curColor != spaces[spaceId].color){ curColor = spaces[spaceId].color; }
+					starting = 0;
+				}
 			}
-		});
-		
-		
+			html+='</div>'
+			
+/**-----------------------------------------------------------------------------------------------------------*/			
+			html+=' <div class="cardBlockRow clearfix">';
+			for(let spaceId=5; spaceId<=35; spaceId+=10){ html += this.cardBlock(playerId,spaceId); }
+			html+='</div>'
+/**-----------------------------------------------------------------------------------------------------------*/			
+			html+=' <div class="cardBlockRow clearfix">';
+			for(let spaceId=12; spaceId<=27; spaceId+=15){ html += this.cardBlock(playerId,spaceId); }
+			html+='</div>'
+			
+			if(playerId!=this.players.length-1){html+="</div>"}
+		}
+ 
 		document.getElementById('propertyCardBlocks').innerHTML = html;
+	}
+	cardBlock(pid,spid){
+		var html='';
+		html+='<div class="cardBlock" pl="'+pid+'" sp="'+spid+'" ';
+		if(spacesOwned[pid][spid] != undefined && spacesOwned[pid][spid].own){
+			html+='style="background:'+ spaces[spid].color +'"';
+		}
+		html+='></div>';			
+		return html;
 	}
 	drawCards(){
 		var html = '';
@@ -172,12 +200,12 @@ class playerManager{
 				}
 			}
 			if(rent == undefined){
-				log( spaces[space].cost.purchase );
+
 				if(spaces[space].cost.purchase == 0){
 					//log('You can not buy this some other action is needed',false);
 					this.players[this.whosTurn].spaceOptions.canBuy = false;
 				}else{
-					log('Want to buy this property ?');
+					log('Want to buy '+spaces[space].name+' for $'+spaces[space].cost.purchase+'?');
 					this.players[this.whosTurn].spaceOptions.canBuy = true;
 				}
 			}
