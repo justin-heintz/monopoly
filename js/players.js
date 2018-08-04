@@ -78,7 +78,6 @@ class playerManager{
 		var curColor = '#864c38';
 		var ignoreIds = [0,2,4,7,10,12,17,20,22,27,30,33,36,38,5,15,25,35];
 		document.getElementById('propertyCardBlocks').innerHTML = html;
- 
 /**-----------------------------------------------------------------------------------------------------------*/
 		for(let playerId=0; playerId<this.players.length; playerId++){
 			var starting = 1;
@@ -95,7 +94,6 @@ class playerManager{
 				}
 			}
 			html+='</div>'
-			
 /**-----------------------------------------------------------------------------------------------------------*/			
 			html+=' <div class="cardBlockRow clearfix">';
 			for(let spaceId=5; spaceId<=35; spaceId+=10){ html += this.cardBlock(playerId,spaceId); }
@@ -105,7 +103,7 @@ class playerManager{
 			for(let spaceId=12; spaceId<=27; spaceId+=15){ html += this.cardBlock(playerId,spaceId); }
 			html+='</div>'
 			
-			if(playerId!=this.players.length-1){html+="</div>"}
+			if(playerId!=this.players.length-1){html+='</div>'}
 		}
  
 		document.getElementById('propertyCardBlocks').innerHTML = html;
@@ -114,8 +112,12 @@ class playerManager{
 		var html='';
 		html+='<div class="cardBlock" pl="'+pid+'" sp="'+spid+'" ';
 		if(spacesOwned[pid][spid] != undefined && spacesOwned[pid][spid].own){
-			html+='style="background:'+ spaces[spid].color +'"';
+			html+='style="background:'+ spaces[spid].color +'; border:1px solid #000"';
+		}else{
+			html+='style=" border:1px solid '+spaces[spid].color+'"';
 		}
+		
+		
 		html+='></div>';			
 		return html;
 	}
@@ -185,6 +187,7 @@ class playerManager{
 			//player owns property
 			log('You own '+spaces[space].name);
 			this.players[this.whosTurn].spaceOptions.canBuy = false;
+			document.getElementById('purchase').setAttribute('disabled',true);
 		}else{
 			for(let players=0; players<this.players.length; players++){
 				if(players != id){
@@ -200,13 +203,14 @@ class playerManager{
 				}
 			}
 			if(rent == undefined){
-
 				if(spaces[space].cost.purchase == 0){
 					//log('You can not buy this some other action is needed',false);
 					this.players[this.whosTurn].spaceOptions.canBuy = false;
+					document.getElementById('purchase').setAttribute('disabled',true);
 				}else{
 					log('Want to buy '+spaces[space].name+' for $'+spaces[space].cost.purchase+'?');
 					this.players[this.whosTurn].spaceOptions.canBuy = true;
+					document.getElementById('purchase').removeAttribute('disabled');
 				}
 			}
 		}
@@ -232,7 +236,6 @@ class playerManager{
 	calcRent(spaceId, player, isMonopoly){
 		if(!spacesOwned[player][spaceId].mortgage){
 			if(isMonopoly){
-				
 				if(spaceId==12 || spaceId==27){
 					return ((this.currentDiceRoll[0]+this.currentDiceRoll[1])*10)
 				}else{					

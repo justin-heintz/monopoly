@@ -7,6 +7,8 @@
 	<script src="js/lib/random.js"></script>
 	<script src="js/lib/loop.js"></script>
 	
+	
+	<script src="js/auction.js"></script>
 	<script src="js/players.js"></script>
 	<script src="js/dice.js"></script>
 	<script src="js/spaces.js"></script>
@@ -21,16 +23,19 @@
 		body{margin:0; padding:0; background:#607d8b;}
  
 		.hidden{display:none;}
-		/*#foreground{display:block; margin:-170px auto 0 auto; border:1px solid #000;}*/
-		#foreground{display:block; float:left; border:1px solid #000;}
+
+		#auctionBoard{position:absolute; width:448px; height:448px; margin:102px 0 0 102px; padding:20px; opacity:1; background:rgba(255,255,255,1);}
+		
+		#foreground{display:block; float:left; }
+		
 		#dice{margin:10px 0; cursor:pointer; }
 		
-		#propertyCards{/*width:366px; float:left;*/}
+		#propertyCards{}
 		
-		#propertyCardBlocks{width:100%;}
+		#propertyCardBlocks{width:100%; padding:4px; background:#cde6d0; border:1px solid #000; border-top:0}
 			.blockWrap{width:100%; padding:10px 0; border-bottom: 1px solid #ccc;}
 			.cardBlockRow{ margin-right: 20px; float:left;}
-				.cardBlock{width:20px; height:20px; float:left; border:1px solid #ccc;}
+				.cardBlock{width:20px; height:20px; margin-right:2px; float:left; border:1px solid #ccc;}
 		
 		.card{width:120px; height:183px; margin:0px; float:left; background:#fff; border: 1px solid #d9d4d4; font-size:10px;}
 			.card .header{padding: 10px 0; color:#fff; text-align:center; font-family:arial; font-size:11px; text-shadow: 1px 1px 2px #0D0B07;}
@@ -39,8 +44,12 @@
 				.widthHouse{}
 					.widthHouse span{float:right;}
 			.card .footer{ padding:10px; text-align:left;}
-		#log{width:428px; height:650px; float:left; background:#fff; overflow-y:scroll; overflow-x:none;}	
+		
+		#log{width:428px; height:650px; float:left; padding:10px 5px;  background:#fff; overflow-y:scroll; overflow-x:none;}	
 			#log p{margin:0; }
+			
+		button{cursor:pointer;}	
+		button[active="true"]{background:red;color:#fff;}	
 	</style>
 </head>
 <body>
@@ -48,13 +57,19 @@
 		<div id="hiddenStart" class="">
 			<button id="start" tabindex="0">Start</button>
 			<div id="noPlayersDisplay">2 Players</div>
-			<input id="noplayers" type="range" min="2" max="4" value="2">	
+			<input id="noplayers" type="range" min="2" max="4" value="4">	
 		</div>
 		
 		<div id="hiddenGame" class="hidden">
 			<div class="col-12">
+				<div id="auctionBoard">
+					<div id="bidding_player">Player: 0</div>
+					<div id="current_Bid">Current Bid: $0</div>
+					
+				</div>
+				
 				<canvas id="foreground" width="650" height="650"></canvas>
-				<div id="log"></dov>
+				<div id="log"></div>
 			</div>
 			<div class="col-12">
 				<div id="propertyCardBlocks" class="clearfix"></div>
@@ -66,7 +81,7 @@
 			<div class="col-12">
 				<div id="uiControls" class="clearfix">
 
-					<button id="purchase">Purchase</button>
+					<button id="purchase" disabled="true">Purchase</button>
 					
 					<button id="sell" class="hidden">Sell</button>
 					
