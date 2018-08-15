@@ -10,6 +10,7 @@ class auction{
 		this.no_players = no_players;
 		this.inc_dec = 1;
 		this.cur_bid = 0;
+		this.property_id = 0;
 		this.player_turn = 0;
 		this.player_bids = [];
 		this.folded_players = [];
@@ -38,6 +39,7 @@ class auction{
 		this.board_elm.innerHTML+=html;
 	}
 	open(property_id){
+		this.property_id = property_id;
 		//disable buttons
 		document.getElementById('purchase').setAttribute('disabled',true);
 		document.getElementById('dice').setAttribute('disabled',true);
@@ -46,6 +48,8 @@ class auction{
 		this.player_turn = pm.whosTurn;
 		//setting vars 
 		this.cur_bid = Math.ceil(spaces[property_id].cost.purchase * .25);
+		this.player_bids = [];
+		this.folded_players = [];		
 		for(let p=0; p<this.no_players; p++){this.player_bids.push( this.cur_bid );}
 		for(let p=0; p<this.no_players; p++){this.folded_players.push(false);}		
 
@@ -55,7 +59,7 @@ class auction{
 	}
 	close(){
 		this.board_elm.style.opacity = 0;
-		document.getElementById('dice').setAttribute('disabled',false);
+		document.getElementById('dice').removeAttribute('disabled');
 	}	
 	set_ui(){
 		document.getElementById('bidding_player').innerHTML = 'Player: '+this.player_turn;
@@ -63,12 +67,15 @@ class auction{
 		document.getElementById('bid_amount').innerHTML = 'Players offer: $'+ this.player_bids[this.player_turn];	
 	}
 	nextPlayer(action){
+		var folded=0;
+		var winner=99;
 		var hold_player = this.player_turn;
-		console.log( this.player_turn );
+ 
 		if(action == 'bid'){
 			this.cur_bid = this.player_bids[this.player_turn];
 			this.set_ui();
 		}
+		
 		if(action == 'fold'){
 			this.folded_players[this.player_turn] = true;
 		}
@@ -87,32 +94,22 @@ class auction{
 				}
 			}
 		}	
-		console.log( this.folded_players,this.player_bids );
-		console.log( this.player_turn );
+ 
 		this.set_ui();
 
-		var folded=0;
 		for(let i=0; i<this.folded_players.length; i++){
 			folded += (this.folded_players[i]?1:0);
+			winner = (!this.folded_players[i]?i:winner);
 		}
-		console.log(folded,(this.folded_players.length - 1));
-		if(folded==this.folded_players.length - 1){
-			this.close();	
-		}
-		/*
-		for(let i=0,c=0; i<this.folded_players; i++){
-			if(this.folded_players[i]){c++;}
-			if(c == this.no_players-1){
-				//player won property
-				console.log(this.player_turn+' ~~~~WON I think ...?~~~~');
-				this.close();
-			}
-		}		
-		*/
-		
-		//TODO::NEED to count how man people have folded
-		//TODO::UPDATE UI to show whos turn it is 
 
+		if(folded==this.folded_players.length - 1){
+			this.close();
+			pm.players[winner].money -= this.cur_bid;
+			spacesOwned[winner][ this.property_id ]={own:true, houses:0, hotels:0, mortgage:false};
+			log('Player ' + winner + ' won ' + spaces[this.property_id].name);
+			//pm.nextPlayer();
+		}
+		 
 	}
 }
 

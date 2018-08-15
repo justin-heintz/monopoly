@@ -9,27 +9,50 @@ class playerManager{
 		this.currentDiceRoll=[];
 		this.whosTurn = 0;
 	}
-	nextPlayer(){
-		this.whosTurn++;
+	nextPlayer(rolled_doubles=false){
+		if(!rolled_doubles){
+			this.whosTurn++;
 
-		if(this.whosTurn >= this.players.length){ 
-			this.whosTurn = 0; 
-		}
-		
-		//reset amount of doubles rolled
-		this.players[this.whosTurn].doublesRolled = 0; 
- 
-		if(this.players[this.whosTurn].jailed){	
-			log('players in jail');
-			this.players[this.whosTurn].jailedTurns++;
-			
-			if(this.players[this.whosTurn].jailedTurns >= 2 || this.players[this.whosTurn].getOutOfJail){
-				this.players[this.whosTurn].jailedTurns = 0;
-				this.players[this.whosTurn].jailed = false
-				this.players[this.whosTurn].getOutOfJail = false;
+			if(this.whosTurn >= this.players.length){ 
+				this.whosTurn = 0; 
 			}
-			this.nextPlayer();
+ 
+			this.drawDom();	
+ 
+			//reset amount of doubles rolled
+			this.players[this.whosTurn].doublesRolled = 0; 
+	 
+			if(this.players[this.whosTurn].jailed){	
+				log('player '+ this.whosTurn +' in jail');
+				this.players[this.whosTurn].jailedTurns++;
+				
+				if(this.players[this.whosTurn].jailedTurns >= 2 || this.players[this.whosTurn].getOutOfJail){
+					this.players[this.whosTurn].jailedTurns = 0;
+					this.players[this.whosTurn].jailed = false
+					this.players[this.whosTurn].getOutOfJail = false;
+				}
+				this.nextPlayer();
+			}
+		}
+	}
+	drawDom(){
+		var divs = document.querySelectorAll('.propertyElm');
+		for(let i=0;i<divs.length; i++){ divs[i].remove(); }	
+		
+		spacesOwned[this.whosTurn].forEach(function(sp,index){ spaces[index].createDomElm(); });
+		
+		var divs = document.querySelectorAll('.propertyElm');
+		for(let i=0;i<divs.length;i++){
+			divs[i].addEventListener('click',function(){
+				var divs = document.querySelectorAll('.propertyElm');
+				for(let i=0;i<divs.length;i++){
+					divs[i].classList.remove('active');
+				}
+				this.classList.add('active');
+				console.log(this);
+			});
 		}		
+		
 	}
 	drawHouses(canvas){
 		for(let i = 0; i<spacesOwned.length; i++){
@@ -39,33 +62,48 @@ class playerManager{
 					canvas.fillStyle='red';
 					for(let h=1; h<=spacesOwned[i][index].hotels; h++){
 						if(index >=1 && index<=9){
-							canvas.fillRect(spaces[index].shape.x, spaces[index].shape.y+80, 50*h, 20);
+							canvas.fillRect(spaces[index].shape.x, spaces[index].shape.y+87.5, 50, 12.5);
 						}
 						if(index >=11 && index<=19){
-							canvas.fillRect(spaces[index].shape.x, spaces[index].shape.y, spaces[index].shape.w-80, 100*h);
+							canvas.fillRect(spaces[index].shape.x, spaces[index].shape.y, spaces[index].shape.w-87.5, 50 );
 						}	
 						if(index >=21 && index<=29){
-							canvas.fillRect(spaces[index].shape.x, spaces[index].shape.y, 50*h, 20);
+							canvas.fillRect(spaces[index].shape.x, spaces[index].shape.y, 50, 12.5);
 						}	
 						if(index >=31 && index<=39){
-							canvas.fillRect(spaces[index].shape.x+80, spaces[index].shape.y, spaces[index].shape.w-80, 100*h);
+							canvas.fillRect(spaces[index].shape.x+87.5, spaces[index].shape.y, spaces[index].shape.w-87.5, 50);
 						}
 					}					
 				}
 				if(spacesOwned[i][index].houses != 0 ){
-					canvas.fillStyle='#6063df';
+
 					for(let h=1; h<=spacesOwned[i][index].houses; h++){
+						switch(h){
+							case 1: 
+								canvas.fillStyle='red';
+							break;
+							case 2: 
+								canvas.fillStyle='blue';
+							break;
+							case 3: 
+								canvas.fillStyle='green';
+							break;
+							case 4: 
+								canvas.fillStyle='purple';
+							break;							
+						}
+						
 						if(index >=1 && index<=9){
-							canvas.fillRect(spaces[index].shape.x, spaces[index].shape.y+80, 25*h, 20);
+							canvas.fillRect(spaces[index].shape.x+((h-1)*12.5), spaces[index].shape.y+87.5, 12.5, 12.5);
 						}
 						if(index >=11 && index<=19){
-							canvas.fillRect(spaces[index].shape.x, spaces[index].shape.y, spaces[index].shape.w-80, 25*h);
+							canvas.fillRect(spaces[index].shape.x, spaces[index].shape.y+((h-1)*12.5), spaces[index].shape.w-87.5,  12.5);
 						}	
 						if(index >=21 && index<=29){
-							canvas.fillRect(spaces[index].shape.x, spaces[index].shape.y, 25*h, 20);
+							canvas.fillRect(spaces[index].shape.x+((h-1)*12.5), spaces[index].shape.y , 12.5 , 12.5);
 						}	
 						if(index >=31 && index<=39){
-							canvas.fillRect(spaces[index].shape.x+80, spaces[index].shape.y, spaces[index].shape.w-80, 25*h);
+							canvas.fillRect(spaces[index].shape.x+87.5, spaces[index].shape.y+((h-1)*12.5), spaces[index].shape.w-87.5, 12.5);
 						}
 					}				
 				}
@@ -289,7 +327,6 @@ class player{
 	update(rolled){
 		var preRolledSpace=this.space;
 		
-		//if(this.doublesRolled>=3){log('shame on you rolling 3 doubles');this.gotoJail();}
 		if(!rolled){this.space=10;}else{
 		this.space+=rolled[0]+rolled[1];
 		}

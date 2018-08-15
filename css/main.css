@@ -1,0 +1,26 @@
+body{margin:0; padding:0; background:#607d8b;}
+.hidden{display:none;}
+#auctionBoard{position:absolute; width:448px; height:448px; margin:102px 0 0 102px; padding:20px; opacity:1; background:rgba(255,255,255,1);}
+#foreground{display:block; float:left; }
+#dice{margin:10px 0; cursor:pointer; }
+#propertyCards{}
+#propertyCardBlocks{width:100%; padding:4px; background:#cde6d0; border:1px solid #000; border-top:0}
+	.blockWrap{width:100%; padding:10px 0; border-bottom: 1px solid #ccc;}
+	.cardBlockRow{ margin-right: 20px; float:left;}
+		.cardBlock{width:20px; height:20px; margin-right:2px; float:left; border:1px solid #ccc;}
+.card{width:120px; height:183px; margin:0px; float:left; background:#fff; border: 1px solid #d9d4d4; font-size:10px;}
+	.card .header{padding: 10px 0; color:#fff; text-align:center; font-family:arial; font-size:11px; text-shadow: 1px 1px 2px #0D0B07;}
+	.card .body{padding: 10px 10px 0 10px; text-align:left;}
+		.card .rent{display:block; margin:0; padding:0; text-align:center;}
+		.widthHouse{}
+			.widthHouse span{float:right;}
+	.card .footer{ padding:10px; text-align:left;}
+#log{width:428px; height:650px; float:left; padding:10px 5px;  background:#fff; overflow-y:scroll; overflow-x:none;}	
+	#log p{margin:0; }
+button{cursor:pointer;}	
+button[active="true"]{background:red;color:#fff;}
+
+
+.propertyElm{position: absolute; cursor:pointer; background:purple;}
+.propertyElm:hover{background:#f44336; border:1px solid #f44336;}
+.propertyElm.active{border:1px solid #9c27b0; background:orange;}

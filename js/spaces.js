@@ -1,7 +1,6 @@
-//if type is null then it is a general property
 class space {
-	constructor(name, cost, color, purchase, upgradeable, shape, type=null){
-		this.id = -1;
+	constructor(id, name, cost, color, purchase, upgradeable, shape, type=null){
+		this.id = id;
 		this.name = name;
 		this.cost = cost;
 		this.color = color;
@@ -10,6 +9,25 @@ class space {
 		this.shape = shape;
 		this.type = type;
 		this.img = {train:400,chest:450,chance:500,water:550,electric:600,income:650,luxury:700};
+
+	}
+	createDomElm(){
+		if(this.cost.purchase!=0){
+			var html = '';
+			if(this.id >=1 && this.id<=9){
+				html = '<div class="propertyElm" pid="'+this.id+'" style="width:50;height:100;margin:'+this.shape.y+'px 0 0 '+this.shape.x+'px; border:1px solid red"></div> ';	
+			}
+			if(this.id >=11 && this.id<=19){
+				html = '<div class="propertyElm" pid="'+this.id+'" style="width:100;height:50;margin:'+this.shape.y+'px 0 0 550px ; border:1px solid red"></div> ';	
+			}
+			if(this.id >=21 && this.id<=29){
+				html = '<div class="propertyElm" pid="'+this.id+'" style="width:50;height:100;margin:'+this.shape.y+'px 0 0 '+this.shape.x+'px; border:1px solid red"></div> ';	
+			}
+			if(this.id >=31 && this.id<=39){
+				html = '<div class="propertyElm" pid="'+this.id+'" style="width:100;height:50;margin:'+this.shape.y+'px 0 0 0; border:1px solid red"></div> ';	
+			}
+			document.getElementById('spaceElm').innerHTML += html;
+		}
 	}
 	draw(canvas){
 		//box	
