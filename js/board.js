@@ -11,27 +11,28 @@ spacesGroup['#0066a4'] = [37,39];
 spacesGroup['#5f9ea0'] = [12,27];
 spacesGroup['#000000'] = [5,15,25,35];
 
-spacesOwned[0][1] = {hotels:1,houses:0,mortgage:false,own:true}
-spacesOwned[0][3] = {hotels:1,houses:0,mortgage:false,own:true}
+spacesOwned[0][1] = {hotels:1,houses:0,mortgage:true,own:true}
+spacesOwned[0][3] = {hotels:1,houses:0,mortgage:true,own:true}
 
 spacesOwned[0][6] = {hotels:0,houses:4,mortgage:false,own:true}
-spacesOwned[0][8] = {hotels:1,houses:0,mortgage:false,own:true}
-spacesOwned[0][9] = {hotels:1,houses:0,mortgage:false,own:true}
+spacesOwned[0][8] = {hotels:0,houses:4,mortgage:true,own:true}
+spacesOwned[0][9] = {hotels:0,houses:4,mortgage:false,own:true}
 
-spacesOwned[0][11] = {hotels:1,houses:0,mortgage:false,own:true}
-spacesOwned[0][13] = {hotels:1,houses:0,mortgage:false,own:true}
-spacesOwned[0][14] = {hotels:1,houses:0,mortgage:false,own:true}
+spacesOwned[0][11] = {hotels:0,houses:2,mortgage:false,own:true}
+spacesOwned[0][13] = {hotels:0,houses:1,mortgage:false,own:true}
+spacesOwned[0][14] = {hotels:0,houses:2,mortgage:false,own:true}
 
-spacesOwned[0][21] = {hotels:1,houses:0,mortgage:false,own:true}
-spacesOwned[0][23] = {hotels:1,houses:0,mortgage:false,own:true}
-spacesOwned[0][24] = {hotels:1,houses:0,mortgage:false,own:true}
+spacesOwned[0][21] = {hotels:0,houses:0,mortgage:false,own:true}
+spacesOwned[0][24] = {hotels:0,houses:0,mortgage:false,own:true}
 
+//spacesOwned[1][19] = {hotels:0,houses:2,mortgage:false,own:true} 
 
-spacesOwned[0][39] = {hotels:1,houses:0,mortgage:false,own:true}
-spacesOwned[0][37] = {hotels:1,houses:0,mortgage:false,own:true}
+spacesOwned[2][39] = {hotels:0,houses:2,mortgage:false,own:true}
+spacesOwned[2][37] = {hotels:0,houses:0,mortgage:false,own:true}
 
+//spacesOwned[3][18] = {hotels:0,houses:2,mortgage:false,own:true} 
 
-
+ 
 spaces = [];
 spaces.push( new space(0,'Go',{'purchase':0},'Gold',false,false, {x:0,y:0,h:100,w:100}));
 spaces.push( new space(1,'Mediterranean Avenue',{'purchase':120,

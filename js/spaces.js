@@ -9,7 +9,6 @@ class space {
 		this.shape = shape;
 		this.type = type;
 		this.img = {train:400,chest:450,chance:500,water:550,electric:600,income:650,luxury:700};
-
 	}
 	createDomElm(){
 		if(this.cost.purchase!=0){

@@ -10,7 +10,7 @@
 	<link rel="stylesheet" type="text/css" href="css/grid.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
-<body>
+<body id="main">
 	<div class="container">
 		<div id="hiddenStart" class="">
 			<button id="start" tabindex="0">Start</button>
@@ -23,27 +23,31 @@
 					<div id="bidding_player">Player: 0</div>
 					<div id="current_Bid">Current Bid: $0</div>
 				</div>
+				<div id="tradeBoard"></div>
 				<div id="spaceElm"></div>
 				<canvas id="foreground" width="650" height="650"></canvas>
 				<div id="log"></div>
 			</div>
-			<div class="col-12">
+			
+			<div class="col-2 paddignRightNone">
+				<div id="playerInfo"></div>
+			</div>			
+			
+			<div class="col-10 paddignLeftNone">
 				<div id="propertyCardBlocks" class="clearfix"></div>
 				<div id="propertyCards"></div>
 			</div>
+			
+
 			<div class="col-12">
-				<div id="playerInfo"></div>
-			</div>
-			<div class="col-12">
-				<div id="uiControls" class="clearfix">
-					<button id="purchase" disabled="true">Purchase</button>
-					<!---->
+				<div id="uiControlsuiControls" class="clearfix">
 					<button id="sell" disabled="true">Sell</button>
 					<button id="demolish" disabled="true">Demolish</button>
 					<button id="mortgage" disabled="true">Mortgage</button>
 					
+					<button id="trade">Trade</button>
+					<button id="purchase" disabled="true">Purchase</button>
 					<button id="build" disabled="true">Buy Houses</button>
-
 					<button id="dice">Roll Dice</button>
 					<button id="nextTurn" disabled="true">End Turn</button>	
 				</div>	
@@ -54,6 +58,7 @@
 	<script src="js/spaces.js"></script>
 	<script src="js/board.js"></script>	
 	<script src="js/auction.js"></script>
+	<script src="js/trade.js"></script>
 	<script src="js/players.js"></script>
 	<script src="js/dice.js"></script>
 	<script src="js/cards.js"></script>

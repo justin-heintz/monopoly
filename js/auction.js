@@ -15,7 +15,8 @@ class auction{
 		this.player_bids = [];
 		this.folded_players = [];
 		
-		this.board_elm.style.opacity = 0;
+		//this.board_elm.style.opacity = 0;
+		this.board_elm.style.display = 'none';
 	}
 	init_html(){
 		var html='';
@@ -24,14 +25,12 @@ class auction{
 					html+='<div id="bid_amount">Players offer: $1</div>';
 					html+='<button id="inc_bid">Inc</button>';
 					html+='<button id="dec_bid">Dec</button>';
-					
 					html+='<div id="set_amount">';
 						html+='<button id="one" amount="1" active="true">$1</button>';
 						html+='<button id="five" amount="5" active="false">$5</button>';
 						html+='<button id="ten" amount="10" active="false">$10</button>';
 						html+='<button id="fifty" amount="50" active="false">$50</button>';
 					html+='</div>';
-					
 				html+='</div>';
 				html+='<button id="place_bid" >Place Bid</button>';
 				html+='<button id="fold" >Fold</button>';
@@ -54,11 +53,13 @@ class auction{
 		for(let p=0; p<this.no_players; p++){this.folded_players.push(false);}		
 
 		//handling visuals 
-		this.board_elm.style.opacity = 1;
+		//this.board_elm.style.opacity = 1;
+		this.board_elm.style.display = 'block';
 		this.set_ui();
 	}
 	close(){
-		this.board_elm.style.opacity = 0;
+		//this.board_elm.style.opacity = 0;
+		this.board_elm.style.display = 'none';
 		document.getElementById('dice').removeAttribute('disabled');
 	}	
 	set_ui(){
@@ -107,9 +108,7 @@ class auction{
 			pm.players[winner].money -= this.cur_bid;
 			spacesOwned[winner][ this.property_id ]={own:true, houses:0, hotels:0, mortgage:false};
 			log('Player ' + winner + ' won ' + spaces[this.property_id].name);
-			//pm.nextPlayer();
 		}
-		 
 	}
 }
 

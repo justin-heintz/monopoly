@@ -10,6 +10,8 @@ class playerManager{
 		this.whosTurn = 0;
 	}
 	nextPlayer(rolled_doubles=false){
+		document.getElementById('build').setAttribute('disabled',true);
+		
 		if(!rolled_doubles){
 			this.whosTurn++;
 
@@ -23,7 +25,7 @@ class playerManager{
 			this.players[this.whosTurn].doublesRolled = 0; 
 	 
 			if(this.players[this.whosTurn].jailed){	
-				log('player '+ this.whosTurn +' in jail');
+				log('player '+ this.whosTurn +' in jail','bad');
 				this.players[this.whosTurn].jailedTurns++;
 				
 				if(this.players[this.whosTurn].jailedTurns >= 2 || this.players[this.whosTurn].getOutOfJail){
@@ -35,24 +37,33 @@ class playerManager{
 			}
 		}
 	}
-	drawDom(){
+	drawDom(){//draws the boxes to allow players to select their property
 		var divs = document.querySelectorAll('.propertyElm');
 		for(let i=0;i<divs.length; i++){ divs[i].remove(); }	
 		
-		spacesOwned[this.whosTurn].forEach(function(sp,index){ spaces[index].createDomElm(); });
+		spacesOwned[this.whosTurn].forEach(function(sp,index){ 
+			//draws the blocks that are clickable
+			spaces[index].createDomElm(); 
+		});
 		
+		//inits the events
 		var divs = document.querySelectorAll('.propertyElm');
 		for(let i=0;i<divs.length;i++){
 			divs[i].addEventListener('click',function(){
+				//removes active class and sets active class to the selected element 
 				var divs = document.querySelectorAll('.propertyElm');
-				for(let i=0;i<divs.length;i++){
-					divs[i].classList.remove('active');
-				}
+				for(let i=0;i<divs.length;i++){ divs[i].classList.remove('active'); }
 				this.classList.add('active');
-				console.log(this);
+				var pid = this.getAttribute('pid');
+				
+				//checks if you have a monopoly or not to enable or disable the buy button
+				if( pm.hasMonopoly(spaces[pid].color,pm.whosTurn) ){
+					document.getElementById('build').removeAttribute('disabled');
+				}else{
+					document.getElementById('build').setAttribute('disabled',true);
+				}
 			});
 		}		
-		
 	}
 	drawHouses(canvas){
 		for(let i = 0; i<spacesOwned.length; i++){
@@ -143,8 +154,27 @@ class playerManager{
 			
 			if(playerId!=this.players.length-1){html+='</div>'}
 		}
- 
-		document.getElementById('propertyCardBlocks').innerHTML = html;
+ 		document.getElementById('propertyCardBlocks').innerHTML = html;
+		this.initEvents();
+	}
+	initEvents(){
+		var divs = document.querySelectorAll('.cardBlock');
+		for(let i=0;i<divs.length;i++){
+			divs[i].addEventListener('mouseover',function(){
+				var card = document.querySelector('.card[index="'+ this.getAttribute('sp') +'"]');
+				if(card != null){
+					card.style.display = "block";;
+					card.style.left = mousePos.x+'px';
+					card.style.top = mousePos.y+'px';
+				}
+			});		
+			divs[i].addEventListener('mouseout',function(){
+				var card = document.querySelector('.card[index="'+ this.getAttribute('sp') +'"]');
+				if(card != null){
+					card.style.display = "none";
+				}
+			});	
+		}		
 	}
 	cardBlock(pid,spid){
 		var html='';
@@ -154,61 +184,63 @@ class playerManager{
 		}else{
 			html+='style=" border:1px solid '+spaces[spid].color+'"';
 		}
-		
-		
 		html+='></div>';			
 		return html;
 	}
 	drawCards(){
 		var html = '';
 		document.getElementById('propertyCards').innerHTML = html;
-		spacesOwned[this.whosTurn].forEach(function(sp,index){
-			if(index==12 || index==27){//utilities
-				html += '<div class="card">'+
-						'<div class="header" style="background:'+ spaces[index].color+'">'+
-						spaces[index].name+
-						'</div>'+
-						'<div class="body">'+
-							'<p class="rent">if one "Utility" is owned, rent is 4 times amount shown on dice.</p> '+
-							'<p class="rent">if both "Utilities" are owned, rent is 10 times amount shown on dice.</p> '+
-						'</div>'+
-						'<div class="footer">'+
-						'</div>'+
-					'</div>';							
-			}else if(index==5 || index==15 || index==25 || index==35){//trains
-				html += '<div class="card">'+
-						'<div class="header" style="background:'+ spaces[index].color+'">'+
-						spaces[index].name+
-						'</div>'+
-						'<div class="body">'+
-							'<p class="rent">Rent $'+spaces[index].cost.rent+'.</p> '+
-							'<p class="rent">If 2 R.R\'s are owned 50.</p> '+
-							'<p class="rent">If 3 " " 100.</p> '+
-							'<p class="rent">If 4 " " 200.</p> '+
-						'</div>'+
-						'<div class="footer">'+
-						'</div>'+
-					'</div>';				
-			}else{
-				html += '<div class="card">'+
-						'<div class="header" style="background:'+ spaces[index].color+'">'+
-						spaces[index].name+
-						'</div>'+
-						'<div class="body">'+
-							'<p class="rent">Rent $'+spaces[index].cost.rent+'</p> '+
-							'<div class="widthHouse clearfix">With 1 House <span>$'+spaces[index].cost.housRent[1]+'</span></div>'+
-							'<div class="widthHouse clearfix">With 2 Houses <span>$'+spaces[index].cost.housRent[2]+'</span></div>'+
-							'<div class="widthHouse clearfix">With 3 Houses <span>$'+spaces[index].cost.housRent[3]+'</span></div>'+
-							'<div class="widthHouse clearfix">With 4 Houses <span>$'+spaces[index].cost.housRent[4]+'</span></div>'+
-							'<p class="rent">With Hotel $'+spaces[index].cost.hotelRent[1]+'</p>'+
-						'</div>'+
-						'<div class="footer">'+
-							'House Cost $'+spaces[index].cost.houseCost+' each<br>'+
-							'Hotel, $'+spaces[index].cost.hotelCost+ ' plus 4 houses<br>'+
-						'</div>'+
-					'</div>';
+		for(var index=0;index<=39;index++){
+			var ignoreIds = [0,2,4,7,10,17,20,22,30,33,36,38];
+			if(ignoreIds.indexOf( index ) == -1){
+ 				if(index==12 || index==27){//utilities
+					html += '<div class="card" index="'+index+'">'+
+							'<div class="header" style="background:'+ spaces[index].color+'">'+
+							spaces[index].name+
+							'</div>'+
+							'<div class="body">'+
+								'<p class="rent">if one "Utility" is owned, rent is 4 times amount shown on dice.</p> '+
+								'<p class="rent">if both "Utilities" are owned, rent is 10 times amount shown on dice.</p> '+
+							'</div>'+
+							'<div class="footer">'+
+							'</div>'+
+						'</div>';							
+				}else if(index==5 || index==15 || index==25 || index==35){//trains
+					html += '<div class="card" index="'+index+'">'+
+							'<div class="header" style="background:'+ spaces[index].color+'">'+
+							spaces[index].name+
+							'</div>'+
+							'<div class="body">'+
+								'<p class="rent">Rent $'+spaces[index].cost.rent+'.</p> '+
+								'<p class="rent">If 2 R.R\'s are owned 50.</p> '+
+								'<p class="rent">If 3 " " 100.</p> '+
+								'<p class="rent">If 4 " " 200.</p> '+
+							'</div>'+
+							'<div class="footer">'+
+							'</div>'+
+						'</div>';				
+				}else{
+					html += '<div class="card" index="'+index+'">'+
+							'<div class="header" style="background:'+ spaces[index].color+'">'+
+							spaces[index].name+
+							'</div>'+
+							'<div class="body">'+
+								'<p class="rent">Rent $'+spaces[index].cost.rent+'</p> '+
+								'<div class="widthHouse clearfix">With 1 House <span>$'+spaces[index].cost.housRent[1]+'</span></div>'+
+								'<div class="widthHouse clearfix">With 2 Houses <span>$'+spaces[index].cost.housRent[2]+'</span></div>'+
+								'<div class="widthHouse clearfix">With 3 Houses <span>$'+spaces[index].cost.housRent[3]+'</span></div>'+
+								'<div class="widthHouse clearfix">With 4 Houses <span>$'+spaces[index].cost.housRent[4]+'</span></div>'+
+								'<p class="rent">With Hotel $'+spaces[index].cost.hotelRent[1]+'</p>'+
+							'</div>'+
+							'<div class="footer">'+
+								'House Cost $'+spaces[index].cost.houseCost+' each<br>'+
+								'Hotel, $'+spaces[index].cost.hotelCost+ ' plus 4 houses<br>'+
+							'</div>'+
+						'</div>';
+				}
 			}
-		});
+		}
+		 
 		document.getElementById('propertyCards').innerHTML = html;		
 	}
 	updatePlayer(rolled){
@@ -223,7 +255,7 @@ class playerManager{
 		var space = this.players[this.whosTurn].space;
 		if(spacesOwned[id][space] != undefined && spacesOwned[id][space].own){
 			//player owns property
-			log('You own '+spaces[space].name);
+			log('You own '+spaces[space].name,'good');
 			this.players[this.whosTurn].spaceOptions.canBuy = false;
 			document.getElementById('purchase').setAttribute('disabled',true);
 		}else{
@@ -232,10 +264,10 @@ class playerManager{
 					if(spacesOwned[players][space] != undefined && spacesOwned[players][space].own){
 						//a player thats not this one owens
 						var rent = this.calcRent(space, players, this.hasMonopoly(spaces[space].color, players) );
-						log('PAY PLAYER '+ players + ': $'+rent);
 						this.players[this.whosTurn].spaceOptions.canBuy = false;
 						this.players[this.whosTurn].money -= rent;
 						this.players[players].money += rent;
+						log('Player '+this.whosTurn +' pay player '+ players + ': $'+rent,'bad');
 						break;
 					}
 				}
@@ -262,12 +294,12 @@ class playerManager{
 		}	
 		return own;
 	}
-	hasMonopoly(color, player ){
+	hasMonopoly(color, player){
 		var own=false;
 		if( spacesGroup[color] != undefined){
 			own = this.numberOwned(color,player);
 		}else{
-			log('Error:', color, spacesGroup[color]);
+			log('Error:', color, spacesGroup[color],'bad');
 		}
 		if(own == spacesGroup[color].length){return true;}else{return false;}
 	}
@@ -287,10 +319,9 @@ class playerManager{
 						return spaces[spaceId].cost.hotelRent[ spacesOwned[player][spaceId].hotels];
 					}
 				}
-				
 			}else{
 				if(spaceId==12 || spaceId==27){
-					return ((this.currentDiceRoll[0]+this.currentDiceRoll[1])*4)
+					return ((this.currentDiceRoll[0]+this.currentDiceRoll[1])*4);
 				}else{
 					return spaces[spaceId].cost.rent;
 				}
@@ -317,9 +348,9 @@ class player{
 		
 		this.engine = Random.engines.mt19937().autoSeed();
 		
-		var srcImg = ['images/players/car.png','images/players/hat.png','images/players/iron.png','images/players/wheel.png'];
+		this.srcImg = ['images/players/car.png','images/players/hat.png','images/players/iron.png','images/players/wheel.png'];
 		this.img = new Image();
-		this.img.src = srcImg[this.id];
+		this.img.src = this.srcImg[this.id];
 	}
 	draw(canvas){
 		canvas.drawImage(this.img, this.position.x, this.position.y);
@@ -333,20 +364,24 @@ class player{
 		//income tax 
 		if(this.space == 4 ){
 			this.money -= parseInt(this.money*.1);
+			log('Income tax','bad');
 		}
 		//luxury tax
 		if(this.space == 38 ){
 			this.money -= 75;
+			log('Luxury tax','bad');
 		}
 		//Chance
 		if(this.space == 7 || this.space == 22|| this.space == 36){
-			log('Chance',cards['chance'].length);
-			log( cards['chance'][Random.integer(0, cards['chance'].length-1)(this.engine)](this) );
+			//log('Chance',cards['chance'].length);
+			var results = cards['chance'][Random.integer(0, cards['chance'].length-1)(this.engine)](this);
+			log(results.msg,results.type);
 		}
 		//Community Chest
 		if(this.space == 2 || this.space == 17|| this.space == 33){
-			log('Community Chest',cards['chance'].length);
-			log( cards['chest'][Random.integer(0, cards['chance'].length-1)(this.engine)](this) );
+			//log('Community Chest',cards['chance'].length);
+			var results = cards['chest'][Random.integer(0, cards['chance'].length-1)(this.engine)](this)
+			log(results.msg,results.type);
 		}
 		//Jail
 		if(this.space == 30 ){
@@ -357,7 +392,6 @@ class player{
 			this.space = (rolled[0]+rolled[1]) - (40 - preRolledSpace);
 			this.money+=200;
 		}
-
 		if(this.space >= 0 && this.space <= 10){
 			this.position.x = (this.space+1)*50;
 			this.position.y = 0+(25 * this.id);
@@ -373,7 +407,7 @@ class player{
 		}
 	}
 	gotoJail(){
-		log('Go To Jail player:' + this.id);
+		log('Go To Jail player:' + this.id,'bad');
 		this.jailed = true;
 		this.jailedTurns = 0;			
 		this.space = 10;		

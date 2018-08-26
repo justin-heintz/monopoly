@@ -1,14 +1,17 @@
-body{margin:0; padding:0; background:#607d8b;}
+body{margin:20px 0 0 0; padding:0;  background:#607d8b;}
 .hidden{display:none;}
-#auctionBoard{position:absolute; width:448px; height:448px; margin:102px 0 0 102px; padding:20px; opacity:1; background:rgba(255,255,255,1);}
+
+#auctionBoard,#tradeBoard{display:none; position:absolute; width:448px; height:448px; margin:102px 0 0 102px; padding:20px; opacity:1; z-index:19; background:rgba(255,255,255,1);}
+#tradeBoard{display:none; opacity:1; z-index:20;}
+
 #foreground{display:block; float:left; }
 #dice{margin:10px 0; cursor:pointer; }
 #propertyCards{}
-#propertyCardBlocks{width:100%; padding:4px; background:#cde6d0; border:1px solid #000; border-top:0}
+#propertyCardBlocks{width:100%; padding:4px; background:#cde6d0; /*border:1px solid #000;*/ border-top:0; cursor: pointer;}
 	.blockWrap{width:100%; padding:10px 0; border-bottom: 1px solid #ccc;}
 	.cardBlockRow{ margin-right: 20px; float:left;}
 		.cardBlock{width:20px; height:20px; margin-right:2px; float:left; border:1px solid #ccc;}
-.card{width:120px; height:183px; margin:0px; float:left; background:#fff; border: 1px solid #d9d4d4; font-size:10px;}
+.card{display:none; position:absolute; pointer-events: none; width:120px; height:183px; margin:0px; float:left; background:#fff; border: 1px solid #d9d4d4; font-size:10px;}
 	.card .header{padding: 10px 0; color:#fff; text-align:center; font-family:arial; font-size:11px; text-shadow: 1px 1px 2px #0D0B07;}
 	.card .body{padding: 10px 10px 0 10px; text-align:left;}
 		.card .rent{display:block; margin:0; padding:0; text-align:center;}
@@ -16,11 +19,32 @@ body{margin:0; padding:0; background:#607d8b;}
 			.widthHouse span{float:right;}
 	.card .footer{ padding:10px; text-align:left;}
 #log{width:428px; height:650px; float:left; padding:10px 5px;  background:#fff; overflow-y:scroll; overflow-x:none;}	
-	#log p{margin:0; }
+	#log p{margin:0; padding:5px 0; border-bottom:1px solid #9E9E9E;}
+	#log p:nth-child(odd){background:#f1f1f1;}
+#playerInfo{height: 172px; padding:4px; background:#cde6d0; text-align:center;}
+	#playerInfo .playerInfoHeader{position:relative; display:inline-block; margin-bottom:10px; color:#222; font-size:17px; font-weight:bold; text-align:center;}
+	#playerInfo .playerInfoText{position:relative; display:inline-block; top:-10px; color:#222;}	
+
+#tradeBoard{}
+	#tradeBoard .column{width:100%; padding:1px 0;}
+		#tradeBoard .column .propBlock{width:20px; height:20px; float:left; margin-right:2px; cursor:pointer; border:1px solid #ccc;}
+	#tradeBoard  .number{width:50px;}
+	
+#uiControls{text-align:right;}
+
 button{cursor:pointer;}	
 button[active="true"]{background:red;color:#fff;}
 
 
-.propertyElm{position: absolute; cursor:pointer; background:purple;}
+.propertyElm{position: absolute; cursor:pointer; background:rgba(0,0,0,0.2);}
 .propertyElm:hover{background:#f44336; border:1px solid #f44336;}
-.propertyElm.active{border:1px solid #9c27b0; background:orange;}
+.propertyElm.active{border:1px solid #9c27b0; background:rgba(0,0,0,0.7);}
+
+
+.paddignRightNone{padding-right:0; padding-left: 16px;}
+.paddignLeftNone{padding-left:0; padding-right: 17px; border-left: 1px solid#ccc;}
+
+.normal{color:#2c2c2c;}
+.warning{color:#9C27B0;}
+.bad{color:#f44336;}
+.good{color:#3f51b5;}
