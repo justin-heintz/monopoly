@@ -11,11 +11,11 @@ spacesGroup['#0066a4'] = [37,39];
 spacesGroup['#5f9ea0'] = [12,27];
 spacesGroup['#000000'] = [5,15,25,35];
 
-spacesOwned[0][1] = {hotels:1,houses:0,mortgage:true,own:true}
-spacesOwned[0][3] = {hotels:1,houses:0,mortgage:true,own:true}
+spacesOwned[0][1] = {hotels:0,houses:3,mortgage:false,own:true}
+spacesOwned[0][3] = {hotels:1,houses:0,mortgage:false,own:true}
 
 spacesOwned[0][6] = {hotels:0,houses:4,mortgage:false,own:true}
-spacesOwned[0][8] = {hotels:0,houses:4,mortgage:true,own:true}
+spacesOwned[0][8] = {hotels:0,houses:4,mortgage:false,own:true}
 spacesOwned[0][9] = {hotels:0,houses:4,mortgage:false,own:true}
 
 spacesOwned[0][11] = {hotels:0,houses:2,mortgage:false,own:true}

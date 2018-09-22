@@ -1,12 +1,15 @@
 // RULES 
 //http://monopoly.wikia.com/wiki/Official_Rules
 //houses + hotels can be sold
-//all houses of a color group must have 4 houses before yo can start buying hotels
-//properties can be sold back to the bank for half price
-//can do private sale of properties to other players
 //to get a mortgage all houses + hotels must be sold on that color group
 //to pay mortgage back pay mortgage plus 10% 
-	
+
+/* Houses and Hotels may be sold back to the Bank at any time for one-half
+ the price paid for them. All houses on one color-group may be sold at once,
+ or they may be sold one house at a time (one hotel equals five houses), 
+ evenly, in reverse of the manner in which they were erected.
+ */
+
 	mousePos = {};
 	dice = new dice();
 	specialSpaces = new Image();
@@ -18,19 +21,6 @@
 	pm  = new playerManager(parseInt(document.getElementById('noplayers').value));
 	auc = new auction(parseInt(document.getElementById('noplayers').value));
 	trade = new tradeObj(parseInt(document.getElementById('noplayers').value));
-	
-	/*AUCTION BTNS MIGHT WANT TO MOVE LATER*/ 
-	btns = document.querySelectorAll('#set_amount button');
-	for(let i=0;i<btns.length;i++){
-		btns[i].addEventListener('click',function(){
-			var btns = document.querySelectorAll('#set_amount button');
-			for(let i=0;i<btns.length;i++){
-				btns[i].setAttribute('active', 'false');
-			}
-			this.setAttribute('active', 'true');
-			auc.inc_dec = parseInt(this.getAttribute('amount'));
-		});
-	}		
  
 	window.onload = function(e){ 
 		document.getElementById('start').click();//this is only for dev
@@ -96,17 +86,19 @@
 	document.getElementById('dice').addEventListener('click',function(){
 		if( !this.getAttribute('disabled') ){
 			dice.roll();
-			//dice.rolled[0] = 1; dice.rolled[1] = 1;
+			//dice.rolled[0] = 4; dice.rolled[1] = 4;
 			if(dice.rolled[0] == dice.rolled[1]){ 
 				pm.players[pm.whosTurn].doublesRolled++;
 				log('Player '+pm.whosTurn +' rolled doubles: '+ pm.players[pm.whosTurn].doublesRolled,'good');
 				if(pm.players[pm.whosTurn].doublesRolled>=3){
-					log('Shame on you rolling 3 doubles, go to jail',bad);
+					
+					log('Shame on you rolling 3 doubles, go to jail','bad');
 					pm.players[pm.whosTurn].gotoJail();
-					pm.players[pm.whosTurn].update(false);
+					pm.players[pm.whosTurn].rollAction(false);
 					pm.players[pm.whosTurn].draw(canvas.foreground);
 					pm.players[pm.whosTurn].doublesRolled = 0;
 					pm.nextPlayer();
+					
 				}
 			}
 			this.setAttribute('disabled',true);
@@ -114,49 +106,76 @@
 			pm.updatePlayer(dice.rolled);					
 		}
 	});
-	document.getElementById('sell').addEventListener('click',function(){});
 	document.getElementById('build').addEventListener('click',function(){
-		var selected = document.querySelectorAll('.propertyElm.active');
-		var pid = selected[0].getAttribute('pid');
-		var houseCount = spacesOwned[pm.whosTurn][pid].houses ;
+		var selected = document.querySelector('.propertyElm.active');
+		var pid = selected.getAttribute('pid');
+		var houseCount = spacesOwned[pm.whosTurn][pid].houses;
+		var HotelCount = spacesOwned[pm.whosTurn][pid].hotels;
+		
 		var even = true;	
 
-		for(let i=0; i<spacesGroup[spaces[pid].color].length; i++){
-			spacesOwned[pm.whosTurn][ spacesGroup[spaces[pid].color][i] ].houses;
-			//consoel.log( spacesOwned[pm.whosTurn][ spacesGroup[spaces[pid].color][i] ].houses );
-		}
- 
-		if(spaces[pid].cost['houseCost'] <= pm.players[pm.whosTurn].money && houseCount < 4){
-			for(let i=0; i<spacesGroup[spaces[pid].color].length; i++){
-				if(spacesGroup[spaces[pid].color][i]!=pid){
-					if( (houseCount+1) - spacesOwned[pm.whosTurn][ spacesGroup[spaces[pid].color][i] ].houses >= 2){
-						log('Distribute houses evenly on properties of the same color','warning');
-						even = false;
-						break;
+		if(houseCount < 4 && HotelCount == 0 ){
+			if(spaces[pid].cost['houseCost'] <= pm.players[pm.whosTurn].money){
+				for(let i=0; i<spacesGroup[spaces[pid].color].length; i++){
+					if(spacesGroup[spaces[pid].color][i]!=pid){
+						if( (houseCount+1) - spacesOwned[pm.whosTurn][ spacesGroup[spaces[pid].color][i] ].houses >= 2){
+							log('Distribute houses evenly on properties of the same color','warning');
+							even = false;
+							break;
+						}
 					}
 				}
-			}
-			if(even){
-				log('House purchased','good');
-				console.log('bought house');
-				spacesOwned[pm.whosTurn][pid].houses++;
-				console.log(spacesOwned[pm.whosTurn][pid].houses);
-				pm.players[pm.whosTurn].money -=  spaces[pid].cost['houseCost'];
+				if(even){
+					log('House purchased on '+spaces[pid].name+' for $'+ spaces[pid].cost['houseCost'] ,'good');
+					spacesOwned[pm.whosTurn][pid].houses++;
+					pm.players[pm.whosTurn].money -=  spaces[pid].cost['houseCost'];
+				}
+			}else{
+				log('You do not have enough money to buy a house.','warning');
 			}
 		}else{
-			if(houseCount < 4){
-				log('You do not have enough money to buy a house.','warning');
+			if(spaces[pid].cost['hotelCost'] <= pm.players[pm.whosTurn].money){
+				var canBuyHotel = true;
+				for(let i=0; i<spacesGroup[spaces[pid].color].length; i++){
+					if( spacesOwned[pm.whosTurn][ spacesGroup[spaces[pid].color][i] ].houses <4 && spacesOwned[pm.whosTurn][ spacesGroup[spaces[pid].color][i] ].hotels!=1){canBuyHotel=false;}
+				}				
+				if(canBuyHotel){
+					log('Hotel purchased on '+spaces[pid].name+' for $'+ spaces[pid].cost['hotelCost'] +' + 4 houses.','good');
+					spacesOwned[pm.whosTurn][ pid ].houses = 0;
+					spacesOwned[pm.whosTurn][ pid ].hotels = 1;
+					pm.players[pm.whosTurn].money -=  spaces[pid].cost['hotelCost'];
+					this.setAttribute('disabled','true')
+				}else{
+					log('All properties of same color must have 4 houses before buying hotels.','warning');
+				}
 			}else{
-				log('to many houses buy hotel fix this one later');
+				log('You do not have enough money to buy a hotel.','warning');
 			}
 		}
 	});
-	document.getElementById('demolish').addEventListener('click',function(){});
-	document.getElementById('mortgage').addEventListener('click',function(){});
-	document.getElementById('trade').addEventListener('click',function(){
-		trade.open();
-		//trade.init_player_select_html();
+	document.getElementById('demolish').addEventListener('click',function(){
+		var selected = document.querySelector('.propertyElm.active');
+		var pid = selected.getAttribute('pid');
+		var houseCount = spacesOwned[pm.whosTurn][pid].houses;
+		console.log(selected,spacesOwned[pm.whosTurn][pid]);
+		console.log(spaces[pid])
 	});
+	document.getElementById('mortgage').addEventListener('click',function(){
+		var selected = document.querySelector('.propertyElm.active');
+		var pid = selected.getAttribute('pid');		
+		var property = spacesOwned[pm.whosTurn][pid];
+ 
+		if(!property.mortgage){
+			property.mortgage=true;
+			pm.players[pm.whosTurn].money += spaces[pid].cost.mortgage;
+			this.innerHTML = 'Pay Mortgage';
+		}else{
+			property.mortgage=false;
+			pm.players[pm.whosTurn].money -= (spaces[pid].cost.mortgage + (spaces[pid].cost.mortgage * .1));
+			this.innerHTML = 'Mortgage';
+		}
+	});
+	document.getElementById('trade').addEventListener('click',function(){ trade.open(); });
 	//auction events
 	document.getElementById('inc_bid').addEventListener('click',function(){
 		if((auc.player_bids[auc.player_turn]+auc.inc_dec) <= pm.players[auc.player_turn].money){
@@ -208,5 +227,5 @@ function log(msg,type='normal'){
 	var elm = document.getElementById('log');
 	elm.innerHTML += '<p class="'+type+'">'+msg+'</p>';
 	elm.scrollTop = elm.scrollHeight;
-	console.log(msg);
+	//console.log(msg);
 }

@@ -14,8 +14,7 @@ class auction{
 		this.player_turn = 0;
 		this.player_bids = [];
 		this.folded_players = [];
-		
-		//this.board_elm.style.opacity = 0;
+ 
 		this.board_elm.style.display = 'none';
 	}
 	init_html(){
@@ -36,6 +35,18 @@ class auction{
 				html+='<button id="fold" >Fold</button>';
 			html+='</div>';
 		this.board_elm.innerHTML+=html;
+		
+		var btns = document.querySelectorAll('#set_amount button');
+		for(let i=0;i<btns.length;i++){
+			btns[i].addEventListener('click',function(){
+				var btns = document.querySelectorAll('#set_amount button');
+				for(let i=0;i<btns.length;i++){
+					btns[i].setAttribute('active', 'false');
+				}
+				this.setAttribute('active', 'true');
+				auc.inc_dec = parseInt(this.getAttribute('amount'));
+			});
+		}		
 	}
 	open(property_id){
 		this.property_id = property_id;

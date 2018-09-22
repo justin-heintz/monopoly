@@ -41,7 +41,6 @@ class tradeObj{
 	//PROPERTY SELECTION SCREEEN
 	init_prop_select_html(){
 		var html = '';
-
 		html += '<div class="push-1 col-4">';
 			html += '<p>Player: '+pm.whosTurn+'</p>';
 			html += this.gen_prop_list(pm.whosTurn,trade.player_trading_with);
@@ -102,9 +101,9 @@ class tradeObj{
 		html+='<div class="propBlock" pid="'+player+'" opid="'+opposite_player+'" spid="'+spid+'" ';
 		
 		if(spacesOwned[player][spid] != undefined && spacesOwned[player][spid].own){
-			if(!spacesOwned[player][spid].mortgage){
+			if(!spacesOwned[player][spid].mortgage){//Not mortgage
 				html+='mortgage="false" selected="false" style="background:'+ spaces[spid].color +'; border:1px solid #000"';
-			}else{
+			}else{//mortgage
 				html+='mortgage="true"  style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAMFBMVEUAAAD///9SUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlKZdkYwAAAAD3RSTlMAABEiRFVmd4iZqrvM3e6QmQjxAAAAW0lEQVQY063QORKAMAzAQBEHTA7b//8tHZODEpVbiuMjfsAeIQDcEelFDwXAbMTWALLVEdUTUHRCiQswmZBW4ezMqA5FF5TIeFqQVq7Kimr13FDC2ZBeZvz55wM5wgUa3pf5vwAAAABJRU5ErkJggg==); border:1px solid #000"';
 			}			
 		}else{
@@ -138,13 +137,10 @@ class tradeObj{
 				delete spacesOwned[pid][spid];
 				spacesOwned[opid][spid]={hotels:0,houses:0,mortgage:false,own:true};
 			}
- 
- 
- 
+
 			if(isNaN(parseInt(document.querySelector(".number[pid='"+pm.whosTurn+"']").value))){ document.querySelector(".number[pid='"+pm.whosTurn+"']").value = 0;}
 			if(isNaN(parseInt(document.querySelector(".number[pid='"+this.player_trading_with+"']").value))){ document.querySelector(".number[pid='"+this.player_trading_with+"']").value = 0;}
 			
- 
 			console.log( pm.players[pm.whosTurn].money , parseInt(document.querySelector(".number[pid='"+pm.whosTurn+"']").value) );
 			console.log( pm.players[this.player_trading_with].money, parseInt(document.querySelector(".number[pid='"+this.player_trading_with+"']").value) );
 			
@@ -155,8 +151,7 @@ class tradeObj{
 			//add money from other player
 			pm.players[pm.whosTurn].money = pm.players[pm.whosTurn].money + parseInt(document.querySelector(".number[pid='"+this.player_trading_with+"']").value);
 			pm.players[this.player_trading_with].money = pm.players[this.player_trading_with].money + parseInt(document.querySelector(".number[pid='"+pm.whosTurn+"']").value);
-			
-			
+
 			this.close();
  		}.bind(this));
 		
@@ -215,9 +210,8 @@ class tradeObj{
 				var mortgage = this.getAttribute('mortgage');
 				var selected = this.getAttribute('selected');
 				
-				
 				if( document.querySelector(".lock[disabled='true'][pid='"+pid+"']") == null ){
-					if(!spacesOwned[pid][spid].mortgage && spacesOwned[pid][spid] !=undefined && spacesOwned[pid][spid].own){
+					if(spacesOwned[pid][spid] !=undefined && spacesOwned[pid][spid].own){// you can trade mortgaged properties !
 						if(selected=='false'){
 							this.style.border = "2px solid orange";
 							this.setAttribute('selected',true);
